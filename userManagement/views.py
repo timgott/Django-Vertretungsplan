@@ -28,3 +28,6 @@ def logout(request):
     
     messages.success(request, 'Sie wurden erfolgreich abgemeldet!')
     return redirect('login')
+
+def profile(request):
+    return render(request, 'userManagement/profile.html')
