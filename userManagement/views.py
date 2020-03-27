@@ -3,16 +3,23 @@ from django.contrib import messages
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required 
 from django.views.decorators.cache import never_cache
+from django.contrib.auth.models import Group
+
 
 from customUser.forms import UserCreationForm
+from .forms import UserUpdateForm
 
 
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
             username = form.cleaned_data.get('username')
+
+            group = Group.objects.get(name='schueler')
+            user.groups.add(group)
+
             messages.success(request, f'Account für {username} erstellt! Der Account wird nun von der AG geprüft und dann freigschaltet!')
             return redirect('login')
     else:
@@ -30,4 +37,15 @@ def logout(request):
     return redirect('login')
 
 def profile(request):
-    return render(request, 'userManagement/profile.html')
+    if request.method == 'POST':
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        if u_form.is_valid():
+            u_form.save()
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+
+    context = {
+        'u_form': u_form,
+    }
+
+    return render(request, 'userManagement/profile.html', context)

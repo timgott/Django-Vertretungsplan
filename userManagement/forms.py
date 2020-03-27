@@ -3,9 +3,9 @@ from customUser.models import SiteUser
 from django.contrib.auth.forms import UserCreationForm 
 from django.conf import settings
 
-class UserRegisterForm(UserCreationForm):
+class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField()
 
-    #class Meta:
-    #    #model = settings.AUTH_USER_MODEL
-    #    fields = ['username', 'email', 'password1', 'password2',]
+    class Meta:
+        model = SiteUser
+        fields = ['username', 'email']

@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 from userManagement import views as userManagement_views
 from vertretungsplan_webapp import views as vPlan_views
@@ -29,5 +31,9 @@ urlpatterns = [
     path('logout/', userManagement_views.logout, name = 'logout'),
     path('profile/', userManagement_views.profile, name = 'profile'),
     #path('changepassword/', ),
-    path('', vPlan_views.home, name = 'vplan-home')
+    path('', vPlan_views.home, name = 'vplan-home'),
+    path('upload/', vPlan_views.upload_file, name = 'vplan-upload'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
