@@ -4,7 +4,7 @@ from django.http import HttpResponse
 def allowed_users(allowed_roles=[], redirect_url=None):
     def decorator(view_func):
         def wrapper_func(request, *args, **kwargs):
-
+            allowed_roles.append('admin')
             groups = None
             if request.user.groups.exists():
                 groups = request.user.groups.all()

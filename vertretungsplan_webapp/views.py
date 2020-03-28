@@ -10,7 +10,7 @@ from userManagement.decorators import allowed_users
 from .forms import VplanUpdateForm
 
 
-@allowed_users(allowed_roles=['admin', 'uploader'], redirect_url='vplan-home')
+@allowed_users(allowed_roles=['uploader'], redirect_url='vplan-home')
 @login_required
 def upload_file(request):
     if request.method == 'POST':
