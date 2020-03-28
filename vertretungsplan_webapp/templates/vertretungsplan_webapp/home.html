@@ -1,21 +1,22 @@
 {% extends "userManagement/base.html" %}
+{% load user_tags %}
 {% block content %}
     <h3>
         Willkommen, {{ user.username }}!
     </h3>
     <nav>
         <div class = "nav nav-tabs mt-4" id = "nav-tab" role = "tablist">
-            {% if is_student or is_teacher %}
+            {% if user|has_group:"schueler, lehrer" %}
                 <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Aktueller Vertretungsplan</a>
                 <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Vorheriger Vertretungsplan</a>
             {% endif %}
-            {% if is_teacher %}
+            {% if user|has_group:"lehrer" %}
                 <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Lehrer Vertretungsplan</a>
             {% endif %}
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
-        {% if is_student or is_teacher %}
+        {% if user|has_group:"schueler, lehrer" %}
             <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                 <img src="http://vplan.whgonline.de/getpng.php?file=vplan">
             </div>
@@ -23,7 +24,7 @@
                 <img src="http://vplan.whgonline.de/getpng.php?file=vplan_a">
             </div>
         {% endif %}
-        {% if is_teacher %}
+        {% if user|has_group:"lehrer" %}
             <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
                 <img src="http://vplan.whgonline.de/getpng.php?file=vplanL">
             </div>

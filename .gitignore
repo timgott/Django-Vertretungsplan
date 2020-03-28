@@ -1,3 +1,5 @@
 Workspace.code-workspace
 media/
 
+db.sqlite3
+
