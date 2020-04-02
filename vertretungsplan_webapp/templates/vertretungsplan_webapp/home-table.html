@@ -1,0 +1,40 @@
+{% if list != None %}
+    {% if date is not None %}
+        <h4>Vertretungsplan für {{ date|date:"l d. F Y" }}</h4>
+        <hr>
+    {% endif %}
+    {% for item in list %}
+        {% for i in item %}    
+            {% ifchanged i.klasse %}
+                <h3>{{i.klasse}}</h3>
+            {% endifchanged %}
+        {% endfor %}
+        <hr>
+        <div class = "table-responsive">
+            <table class="table table-hover table-bordered">  
+                <thead class="thead-light">
+                    <tr>
+                        <th>Stunde</th>
+                        <th>Fach</th>
+                        <th>Raum</th>
+                        <th>Info</th>
+                        <th>Art</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in item %}
+                    <tr>
+                        <th scope="row">{{i.pos}}</th>
+                        <td>{{i.fach}}</td>
+                        <td>{{i.raum}}</td>
+                        <td>{{i.info}}</td>
+                        <td>{{i.art}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endfor %}
+{% else %}
+    <h4>Es konnte kein Vertretungsplan gefunden werden.</h4>
+{% endif %}
