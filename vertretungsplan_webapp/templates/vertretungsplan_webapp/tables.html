@@ -1,0 +1,28 @@
+{% extends "vertretungsplan_webapp/home.html" %}
+
+{% block table_s %}
+    <div class = "table-responsive">
+        <table class="table table-hover table-bordered">  
+            <thead class="thead-light">
+                <tr>
+                    <th>Stunde</th>
+                    <th>Fach</th>
+                    <th>Raum</th>
+                    <th>Info</th>
+                    <th>Art</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in item %}
+                <tr>
+                    <th scope="row">{{i.pos}}</th>
+                    <td>{{i.fach}}</td>
+                    <td>{{i.raum}}</td>
+                    <td>{{i.info}}</td>
+                    <td>{{i.art}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock table_s %}

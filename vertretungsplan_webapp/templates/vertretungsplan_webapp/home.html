@@ -1,34 +1,49 @@
-{% extends "userManagement/base.html" %}
-{% load user_tags %}
+{% extends "vertretungsplan_webapp/home-base.html" %}
+{% load crispy_forms_tags %}
 
-{% block content %}
-    <h3>
-        Willkommen, {{ user.username }}!
-    </h3>
-    <nav>
-        <div class = "nav nav-tabs mt-4" id = "nav-tab" role = "tablist">
-            {% if user|has_group:"schueler, lehrer" %}
-                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Aktueller Vertretungsplan</a>
-                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Vorheriger Vertretungsplan</a>
-            {% endif %}
-            {% if user|has_group:"lehrer" %}
-                <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Lehrer Vertretungsplan</a>
-            {% endif %}
-        </div>
-    </nav>
-    <div class="tab-content" id="nav-tabContent">
-        {% if user|has_group:"schueler, lehrer" %}
-            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                <img src="http://vplan.whgonline.de/getpng.php?file=vplan">
-            </div>
-            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                <img src="http://vplan.whgonline.de/getpng.php?file=vplan_a">
-            </div>
-        {% endif %}
-        {% if user|has_group:"lehrer" %}
-            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-                <img src="http://vplan.whgonline.de/getpng.php?file=vplanL">
-            </div>
-        {% endif %}
-    </div>
-{% endblock content %}
+{% block vplan %}
+    {% if vplan != False %}
+        <h4>Vertretungsplan für den: {{ vplan_date|date:"D d M Y" }}</h4>
+        <hr>
+        {% for item in vplan %}
+            {% for i in item %}    
+                {% ifchanged i.klasse %}
+                    <h3>{{i.klasse}}</h3>
+                {% endifchanged %}
+            {% endfor %}
+
+            {% block table_s %}
+            {% endblock table_s %}
+
+        {% endfor %}
+    {% else %}
+        <h4>Es konnte kein Vertretungsplan gefunden werden.</h4>
+    {% endif %}
+{% endblock vplan %}
+
+{% block vplan_a %}
+    {% if vplan_a != False %}
+        <h4>Vertretungsplan für den: {{ vplan_a_date|date:"D d M Y" }}</h4>
+        <hr>
+
+        {% for item in vplan_a %}
+            {% for i in item %}    
+                {% ifchanged i.klasse %}
+                    <h3>{{i.klasse}}</h3>
+                {% endifchanged %}
+            {% endfor %}
+
+            {% block table_s %}
+            {% endblock table_s %}
+
+        {% endfor %}
+    {% else %}
+        <h4>Es konnte kein Vertretungsplan gefunden werden.</h4>
+    {% endif %}
+{% endblock vplan_a %}
+
+{% block vplan_L %}
+    <img src="http://vplan.whgonline.de/getpng.php?file=vplanL">
+{% endblock vplan_L %}
+
+

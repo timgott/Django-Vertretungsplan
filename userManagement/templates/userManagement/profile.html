@@ -1,10 +1,8 @@
-{% extends "userManagement/base.html" %}
+{% extends "userManagement/profile-base.html" %}
 {% load crispy_forms_tags %}
 
-{% block content %}
-    <h1>
-        {{ user.username }}
-    </h1>
+
+{% block username-mail %}
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <fieldset class = "form-group">
@@ -12,11 +10,29 @@
                 Profil
             </legend>
             {{ u_form|crispy }}
+            {{ p_form|crispy }}
         </fieldset>
         <div class = "form-group">
-            <button class = "btn btn-outline-info" type = "submit">
+            <button class = "btn btn-outline-info" type = "submit" name = "u_form">
                 Aktualisieren
             </button>
         </div>
+    </form>        
+{% endblock username-mail %}
+{% block change-password %}
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset class = "form-group">
+            <legend class = "border-bottom mb-4">
+                Passwort ändern
+            </legend>
+            {{ p_c_form|crispy }}
+        </fieldset>
+        <div class = "form-group">
+            <button class = "btn btn-outline-info" type = "submit" name = "p_c_form">
+                Passwort ändern
+            </button>
+        </div>
     </form>
-{% endblock content %}
+{% endblock change-password %}
+

@@ -1,13 +1,18 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import logout as auth_logout
+from django.contrib.auth import logout as auth_logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required 
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.models import Group
+from django.contrib.auth.forms import PasswordChangeForm
+from django.utils.decorators import method_decorator
+from django.views.decorators.debug import sensitive_post_parameters
+from django.views.decorators.csrf import csrf_protect
 
 
 from customUser.forms import UserCreationForm
-from .forms import UserUpdateForm
+
+from .forms import UserUpdateForm, ProfileUpdateForm
 
 
 def register(request):
@@ -36,16 +41,48 @@ def logout(request):
     messages.success(request, 'Sie wurden erfolgreich abgemeldet!')
     return redirect('login')
 
+
+@csrf_protect
+@login_required
 def profile(request):
+    active_tab = 'username-mail'
     if request.method == 'POST':
-        u_form = UserUpdateForm(request.POST, instance=request.user)
-        if u_form.is_valid():
-            u_form.save()
+        
+
+        if 'u_form' in request.POST:
+            p_form = ProfileUpdateForm(request.POST, instance = request.user.profile)
+            u_form = UserUpdateForm(request.POST, instance=request.user)
+            if u_form.is_valid():
+                u_form.save()
+            if p_form.is_valid():
+                p_form.save()        
+            p_c_form = PasswordChangeForm(request.user)
+            active_tab = 'username-mail'
+
+        elif 'p_c_form' in request.POST:
+            p_c_form = PasswordChangeForm(request.user, request.POST)
+            if p_c_form.is_valid():
+                user = p_c_form.save()
+                # Updating the password logs out all other sessions for the user
+                # except the current one.
+                update_session_auth_hash(request, user)
+                messages.success(request, 'Ihr Passwort wurde erfolgreich geändert')
+                
+            else:
+                active_tab = 'change-password'
+            u_form = UserUpdateForm(instance=request.user)
+            p_form = ProfileUpdateForm(request.POST, instance = request.user.profile)
+
     else:
         u_form = UserUpdateForm(instance=request.user)
-
+        p_form = ProfileUpdateForm(instance = request.user.profile)
+        p_c_form = PasswordChangeForm(request.user)
+    
     context = {
         'u_form': u_form,
+        'p_form': p_form,
+        'p_c_form': p_c_form,
+        'active_tab': active_tab,
     }
 
     return render(request, 'userManagement/profile.html', context)

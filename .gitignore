@@ -3,3 +3,4 @@ media/
 
 db.sqlite3
 
+vertretungsplan_webapp/templates/vertretungsplan_webapp/vplan_upload_copy.html

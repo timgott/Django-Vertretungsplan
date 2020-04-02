@@ -4,40 +4,56 @@ from django.http import HttpResponseRedirect
 from django.core.files.storage import FileSystemStorage
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
+from django.contrib import messages
+from django.utils import timezone
 
 from userManagement.decorators import allowed_users
 
 from .forms import VplanUpdateForm
+from .models import Vplan, VplanSchuelerEntry
 
+from .methods import get_query, post_table
+from .vplan_parser import convertPDF
 
 @allowed_users(allowed_roles=['uploader'], redirect_url='vplan-home')
 @login_required
 def upload_file(request):
     if request.method == 'POST':
         form = VplanUpdateForm(request.POST, request.FILES)
-        files = request.FILES.getlist('file_field')
+        files = request.FILES.getlist('file')
         if form.is_valid():
-            print(files)
+
             for f in files:
-                print(f)
+
                 uploaded_file = f
                 file_name = uploaded_file.name
-                # file_path = f'media/{file_name}'
                 fs = FileSystemStorage()
+                
                 if fs.exists(file_name):
                     fs.delete(file_name)
-                
                 fs.save(uploaded_file.name, uploaded_file)
-            return redirect('vplan-home')
+
+                file_path = f'media/{file_name}'
+                if 'vplan'in file_name.strip('.pdf') and '.pdf' in file_name.strip('vplan'):
+                    needed = ['Pos','Fach','Klasse','Raum','Art','Info']
+                    post_table(file_path, VplanSchuelerEntry, needed)
+                
+            messages.success(request, 'Die Dateien wurden erfolgreich hochgeladen!')
     else:
         form = VplanUpdateForm()
     return render(request, 'vertretungsplan_webapp/vplan_upload.html', {'form': form})
 
 @login_required
 def home(request):
-    current_user_groups = request.user.groups.values_list("name", flat=True)
+    filter_klasse = ['13','11','12']
+    vplan, vplan_date = get_query(neu = True)
+    vplan_a, vplan_a_date = get_query(neu = False)
+    print(vplan)
     context = {
-        "is_teacher": ("lehrer" in current_user_groups or "admin" in current_user_groups),
-        "is_student": "schueler" in current_user_groups,
+        'filter_klasse': filter_klasse,
+        'vplan': vplan,
+        'vplan_date': vplan_date,
+        'vplan_a': vplan_a,
+        'vplan_a_date': vplan_a_date,
     }
     return render(request, 'vertretungsplan_webapp/home.html', context)

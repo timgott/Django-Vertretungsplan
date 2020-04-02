@@ -1,10 +1,17 @@
 from django.db import models
 from customUser.models import SiteUser
 
+from .validators import UnicodeClassValidator
+
 class Profile(models.Model):
     user = models.OneToOneField(SiteUser, on_delete=models.CASCADE)
-    klasse = models.CharField(max_length = 3, verbose_name= 'Klasse')
-    kurs = models.CharField(max_length = 5, verbose_name = 'Kurs')
+    klasse = models.CharField(max_length = 3, 
+        verbose_name= 'Klasse',
+        help_text=('Muss die Klasse sein nicht der Kurs!.'),
+        validators = [UnicodeClassValidator],
+        blank = True
+        )
+    kurs = models.CharField(max_length = 10, verbose_name = 'Kurs', blank = True)
 
 
     def __str__(self):

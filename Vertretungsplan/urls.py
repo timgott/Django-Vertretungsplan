@@ -30,7 +30,6 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view( template_name = 'userManagement/login.html' ), name = 'login'),
     path('logout/', userManagement_views.logout, name = 'logout'),
     path('profile/', userManagement_views.profile, name = 'profile'),
-    #path('changepassword/', ),
     path('', vPlan_views.home, name = 'vplan-home'),
     path('upload/', vPlan_views.upload_file, name = 'vplan-upload'),
 ]

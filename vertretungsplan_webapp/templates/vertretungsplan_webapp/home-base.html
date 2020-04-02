@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load user_tags %}
+
+{% block content %}
+    <h3>
+        Willkommen, {{ user.username }}!
+    </h3>
+    <nav>
+        <div class = "nav nav-tabs mt-4" id = "nav-tab" role = "tablist">
+            {% if user|has_group:"schueler, lehrer" %}
+                <a class="nav-item nav-link active" id="vplan-tab" data-toggle="tab" href="#vplan" role="tab" aria-controls="vplan" aria-selected="true">Aktueller Vertretungsplan</a>
+                <a class="nav-item nav-link " id="vplan-a-tab" data-toggle="tab" href="#vplan-a" role="tab" aria-controls="vplan-a" aria-selected="false">Vorheriger Vertretungsplan</a>
+            {% endif %}
+            {% if user|has_group:"lehrer" %}
+                <a class="nav-item nav-link" id="vplan-l-tab" data-toggle="tab" href="#vplan-l" role="tab" aria-controls="vplan-l" aria-selected="false">Lehrer Vertretungsplan</a>
+            {% endif %}
+        </div>
+    </nav>
+    <div class="tab-content mt-3" id="nav-tabContent">
+        {% if user|has_group:"schueler, lehrer" %}
+            <div class="tab-pane fade show active" id="vplan" role="tabpanel" aria-labelledby="vplan-tab">
+                {% block vplan %}
+                {% endblock vplan %}
+            </div>
+            <div class="tab-pane fade" id="vplan-a" role="tabpanel" aria-labelledby="vplan-a-tab">
+                {% block vplan_a %}
+                {% endblock vplan_a %}
+            </div>
+        {% endif %}
+        {% if user|has_group:"lehrer" %}
+            <div class="tab-pane fade" id="vplan-l" role="tabpanel" aria-labelledby="vplan-l-tab">
+                {% block vplan_L %}
+                {% endblock vplan_L %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h1 class = "mb-4">
+        {{ user.username }}
+    </h1>
+    <div class="row">
+        <div class="col-xs-auto col-md-3 mb-4">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link {% if active_tab == 'username-mail' %}active{% endif %}" id="username-mail-tab" data-toggle="pill" href="#username-mail" role="tab" aria-controls="username-mail" aria-selected="true">Nutzername/E-mail</a>
+                <a class="nav-link {% if active_tab == 'change-password' %}active{% endif %}" id="change-password-tab" data-toggle="pill" href="#change-password" role="tab" aria-controls="change-password" aria-selected="true">Passwort ändern</a>
+            </div>
+        </div>
+        <div class="col-xs-auto col-md-9">
+            <div class="tab-content" id="v-pills-tabContent">
+                <div class="tab-pane fade {% if active_tab == 'username-mail' %}show active{% endif %}" id="username-mail" role="tabpanel" aria-labelledby="username-mail-tab">
+                    {% block username-mail %} {% endblock username-mail %}
+                </div>
+                <div class="tab-pane fade {% if active_tab == 'change-password' %}show active{% endif %}" id="change-password" role="tabpanel" aria-labelledby="change-password-tab">
+                    {% block change-password %} {% endblock change-password %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
