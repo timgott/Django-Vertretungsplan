@@ -45,17 +45,13 @@ def upload_file(request):
 
 @login_required
 def home(request):
-    filter_klasse = ['11']
-    filter_kurs = []
+    filter_klasse = [request.user.profile.klasse]
+    kurs_filter = ['inf2']
     vplan_filtered = []
     if filter_klasse != []:
         vplan, vplan_date, vplan_filtered = get_query(filter = 'klasse', neu = True, search = filter_klasse)
         vplan_a, vplan_a_date, vplan_a_filtered = get_query(filter = 'klasse', neu = False, search = filter_klasse)
-
-    # elif filter_kurs != []:
-    #     vplan, vplan_date, vplan_filtered = get_query(filter = 'kurs', neu = True, search = filter_kurs)
-    #     vplan_a, vplan_a_date, vplan_a_filtered = get_query(filter = 'kurs', neu = False, search = filter_kurs)
-
+            
     else:
         vplan, vplan_date, vplan_filtered = get_query(neu = True)
         vplan_a, vplan_a_date, vplan_a_filtered = get_query(neu = False)
@@ -67,5 +63,6 @@ def home(request):
         'vplan_a': vplan_a,
         'vplan_a_filtered': vplan_a_filtered,
         'vplan_a_date': vplan_a_date,
+        'kurs_filter': kurs_filter,
     }
     return render(request, 'vertretungsplan_webapp/home.html', context)

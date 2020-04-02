@@ -23,7 +23,7 @@
                 </thead>
                 <tbody>
                     {% for i in item %}
-                    <tr>
+                    <tr class = "{% if i.fach in kurse %}table-info{% endif %}">
                         <th scope="row">{{i.pos}}</th>
                         <td>{{i.fach}}</td>
                         <td>{{i.raum}}</td>

@@ -1,7 +1,7 @@
 {% if filtered is None %}
     {% include "vertretungsplan_webapp/home-table.html" with list=vplan date=date %}
 {% else %}
-    {% include "vertretungsplan_webapp/home-table.html" with list=filtered date=date %}
+    {% include "vertretungsplan_webapp/home-table.html" with list=filtered date=date kurse=kurse %}
     <div class="collapse" id="collapseVplan">
         {% include "vertretungsplan_webapp/home-table.html" with list=vplan date=None %}
     </div>
