@@ -48,7 +48,6 @@ def home(request):
     filter_klasse = ['13','11','12']
     vplan, vplan_date = get_query(neu = True)
     vplan_a, vplan_a_date = get_query(neu = False)
-    print(vplan)
     context = {
         'filter_klasse': filter_klasse,
         'vplan': vplan,
