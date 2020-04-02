@@ -1,0 +1,12 @@
+{% if filtered is None %}
+    {% include "vertretungsplan_webapp/home-table.html" with list=vplan date=date %}
+{% else %}
+    {% include "vertretungsplan_webapp/home-table.html" with list=filtered date=date %}
+    <div class="collapse" id="collapseVplan">
+        {% include "vertretungsplan_webapp/home-table.html" with list=vplan date=None %}
+    </div>
+    <button class="text-toggle btn btn-outline-info mb-4" type="button" data-toggle="collapse" data-target="#collapseVplan" aria-expanded="false" aria-controls="collapseVplan">
+        <span class = "text-collapsed">Mehr Anzeigen</span>
+        <span class = "text-expanded">Weniger Anzeigen</span>
+    </button>    
+{% endif %}
