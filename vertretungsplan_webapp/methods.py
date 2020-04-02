@@ -36,13 +36,26 @@ def post_table(file_path, model, needed):
             row['Klasse'] = table.title
             post_row(row, vplan_id, model)
 
-def query_to_list(query):
-    if query.exists():
+def get_query(neu = True, filter = None ):
+    if neu == True:
+        vplan = Vplan.objects.all().order_by('-vplanUploadDate')[0]
+        vplan_date = vplan.vplanDate
+    else:
+        latest_vplan = Vplan.objects.all().latest('vplanUploadDate')
+        vplan = Vplan.objects.exclude(vplanDate__exact = latest_vplan.vplanDate).order_by('-vplanUploadDate')[0]
+        vplan_date = vplan.vplanDate
+    
+    if filter == None:
+        query_results = vplan.vplanschuelerentry_set.all()
+    else:
+        query_results = vplan.vplanschuelerentry_set.filter(klasse__in=('11'))
+    
+    if query_results.exists():
         lists = []
-        last_klasse = query[0].klasse
+        last_klasse = query_results[0].klasse
         temp_list = []
 
-        for item in query:
+        for item in query_results:
             
             if item.klasse == last_klasse:
                 temp_list.append(item)
@@ -54,28 +67,6 @@ def query_to_list(query):
             last_klasse = item.klasse
         if temp_list not in lists:
             lists.append(temp_list)
-        return lists
+        return (lists, vplan_date)
     else:
-        return None
-
-def get_query(filter, neu = True, search = None ):
-    if neu == True:
-        vplan = Vplan.objects.all().order_by('-vplanUploadDate')[0]
-        vplan_date = vplan.vplanDate
-    else:
-        latest_vplan = Vplan.objects.all().latest('vplanUploadDate')
-        vplan = Vplan.objects.exclude(vplanDate__exact = latest_vplan.vplanDate).order_by('-vplanUploadDate')[0]
-        vplan_date = vplan.vplanDate
-    
-    if filter == None:
-        query_results = vplan.vplanschuelerentry_set.all()
-        lists = query_to_list(query_results)
-        return (lists, vplan_date, None)
-    else:
-        filter = filter + '__' + 'in'
-        query_filtered = vplan.vplanschuelerentry_set.filter(**{filter: search})
-        query_rest = vplan.vplanschuelerentry_set.exclude(**{filter: search})
-
-        list_filtered = query_to_list(query_filtered)
-        list_rest = query_to_list(query_rest)
-        return (list_rest, vplan_date, list_filtered)
+        return (False, False)
