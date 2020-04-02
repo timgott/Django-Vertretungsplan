@@ -4,10 +4,13 @@ from .vplan_parser import convertPDF
 
 
 
-def fill_blanks(dicts, needed):
+def fill_blanks(dicts, last_row, needed):
     for i in needed:
         if i not in dicts.keys():
-            dicts[i] = '-'
+            if 'Pos' in needed and i == 'Pos':
+                dicts[i] = last_row[i]
+            else:    
+                dicts[i] = '-'
     return dicts
 
 def reverse_date(date):
@@ -32,7 +35,8 @@ def post_table(file_path, model, needed):
 
     for table in tables:
         for row in table.rows:
-            fill_blanks(row, needed)
+            last_row_index = table.rows.index(row) - 1
+            fill_blanks(row, last_row_index, needed)
             row['Klasse'] = table.title
             post_row(row, vplan_id, model)
 
