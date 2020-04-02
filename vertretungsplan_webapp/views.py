@@ -45,27 +45,14 @@ def upload_file(request):
 
 @login_required
 def home(request):
-    filter_klasse = ['11']
-    filter_kurs = []
-    vplan_filtered = []
-    if filter_klasse != []:
-        vplan, vplan_date, vplan_filtered = get_query(filter = 'klasse', neu = True, search = filter_klasse)
-        vplan_a, vplan_a_date, vplan_a_filtered = get_query(filter = 'klasse', neu = False, search = filter_klasse)
-
-    # elif filter_kurs != []:
-    #     vplan, vplan_date, vplan_filtered = get_query(filter = 'kurs', neu = True, search = filter_kurs)
-    #     vplan_a, vplan_a_date, vplan_a_filtered = get_query(filter = 'kurs', neu = False, search = filter_kurs)
-
-    else:
-        vplan, vplan_date, vplan_filtered = get_query(neu = True)
-        vplan_a, vplan_a_date, vplan_a_filtered = get_query(neu = False)
-
+    filter_klasse = ['13','11','12']
+    vplan, vplan_date = get_query(neu = True)
+    vplan_a, vplan_a_date = get_query(neu = False)
     context = {
+        'filter_klasse': filter_klasse,
         'vplan': vplan,
-        'vplan_filtered': vplan_filtered,
         'vplan_date': vplan_date,
         'vplan_a': vplan_a,
-        'vplan_a_filtered': vplan_a_filtered,
         'vplan_a_date': vplan_a_date,
     }
     return render(request, 'vertretungsplan_webapp/home.html', context)
