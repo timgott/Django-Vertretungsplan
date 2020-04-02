@@ -1,49 +1,13 @@
 {% extends "vertretungsplan_webapp/home-base.html" %}
-{% load crispy_forms_tags %}
 
 {% block vplan %}
-    {% if vplan != False %}
-        <h4>Vertretungsplan für den: {{ vplan_date|date:"D d M Y" }}</h4>
-        <hr>
-        {% for item in vplan %}
-            {% for i in item %}    
-                {% ifchanged i.klasse %}
-                    <h3>{{i.klasse}}</h3>
-                {% endifchanged %}
-            {% endfor %}
-
-            {% block table_s %}
-            {% endblock table_s %}
-
-        {% endfor %}
-    {% else %}
-        <h4>Es konnte kein Vertretungsplan gefunden werden.</h4>
-    {% endif %}
+    {% include "vertretungsplan_webapp/home-vplan.html" with list=vplan date=vplan_date %}
 {% endblock vplan %}
 
 {% block vplan_a %}
-    {% if vplan_a != False %}
-        <h4>Vertretungsplan für den: {{ vplan_a_date|date:"D d M Y" }}</h4>
-        <hr>
-
-        {% for item in vplan_a %}
-            {% for i in item %}    
-                {% ifchanged i.klasse %}
-                    <h3>{{i.klasse}}</h3>
-                {% endifchanged %}
-            {% endfor %}
-
-            {% block table_s %}
-            {% endblock table_s %}
-
-        {% endfor %}
-    {% else %}
-        <h4>Es konnte kein Vertretungsplan gefunden werden.</h4>
-    {% endif %}
+    {% include "vertretungsplan_webapp/home-vplan.html" with list=vplan_a date=vplan_a_date %}
 {% endblock vplan_a %}
 
 {% block vplan_L %}
     <img src="http://vplan.whgonline.de/getpng.php?file=vplanL">
 {% endblock vplan_L %}
-
-
