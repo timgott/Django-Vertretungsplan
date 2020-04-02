@@ -36,7 +36,8 @@ def post_table(file_path, model, needed):
     for table in tables:
         for row in table.rows:
             last_row_index = table.rows.index(row) - 1
-            fill_blanks(row, last_row_index, needed)
+            last_row = table.rows[last_row_index]
+            fill_blanks(row, last_row, needed)
             row['Klasse'] = table.title
             post_row(row, vplan_id, model)
 
