@@ -90,3 +90,12 @@ def get_query(filter, neu = True):
         list_filtered = query_to_list(query_filtered)
         list_rest = query_to_list(query_rest)
         return (list_rest, vplan_date, list_filtered)
+
+def create_dict(keys, values):
+    dict = {}
+    for key in keys:
+        index = keys.index(key)
+        if values[index] != []:
+            dict[key] = values[index]
+    dict = get_filter(dict)
+    return dict

@@ -7,6 +7,6 @@ from django.utils.translation import gettext_lazy as _
 class UnicodeUsernameValidator(validators.RegexValidator):
     regex = r'^[\w\s.@+-][^\n\t]+\Z'
     message = _(
-        'Enter a valid username. This value may only be your full name.'
+        'Benutzername kann nicht vergeben werden. Bitte gebe deinen vollen Namen ein!'
     )
     flags = 0

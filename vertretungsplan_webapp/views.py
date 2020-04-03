@@ -12,7 +12,7 @@ from userManagement.decorators import allowed_users
 from .forms import VplanUpdateForm
 from .models import Vplan, VplanSchuelerEntry
 
-from .methods import get_query, post_table, get_filter
+from .methods import get_query, post_table, get_filter, create_dict
 from .vplan_parser import convertPDF
 
 @allowed_users(allowed_roles=['uploader'], redirect_url='vplan-home')
@@ -47,12 +47,11 @@ def upload_file(request):
 def home(request):
     filter_klasse = [request.user.profile.klasse]
     kurs_filter = ['inf2']
-    filter_dict = {'klasse': filter_klasse, 'fach': kurs_filter}
-    filter = get_filter(filter_dict)
+    filter_dict = create_dict(['klasse', 'fach'], [filter_klasse, kurs_filter])
     vplan_filtered = []
     if filter_klasse != []:
-        vplan, vplan_date, vplan_filtered = get_query(filter=filter, neu = True)
-        vplan_a, vplan_a_date, vplan_a_filtered = get_query(filter=filter, neu = False)
+        vplan, vplan_date, vplan_filtered = get_query(filter=filter_dict, neu = True)
+        vplan_a, vplan_a_date, vplan_a_filtered = get_query(filter=filter_dict, neu = False)
             
     else:
         vplan, vplan_date, vplan_filtered = get_query(neu = True)
