@@ -1,8 +1,4 @@
 {% if list != None %}
-    {% if date is not None %}
-        <h4>Vertretungsplan für {{ date|date:"l d. F Y" }}</h4>
-        <hr>
-    {% endif %}
     {% for item in list %}
         {% for i in item %}    
             {% ifchanged i.klasse %}
@@ -23,7 +19,7 @@
                 </thead>
                 <tbody>
                     {% for i in item %}
-                    <tr class = "{% if i.fach in kurse %}table-info{% endif %}">
+                    <tr">
                         <th scope="row">{{i.pos}}</th>
                         <td>{{i.fach}}</td>
                         <td>{{i.raum}}</td>

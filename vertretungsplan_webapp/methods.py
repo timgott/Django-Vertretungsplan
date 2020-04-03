@@ -63,7 +63,14 @@ def query_to_list(query):
     else:
         return None
 
-def get_query(filter, neu = True, search = None ):
+def get_filter(filter_dict):
+    keys = list(filter_dict.keys())
+    for key in keys:
+        new_key = key + '__' + 'in'
+        filter_dict[new_key] = filter_dict.pop(key)
+    return filter_dict
+
+def get_query(filter, neu = True):
     if neu == True:
         vplan = Vplan.objects.all().order_by('-vplanUploadDate')[0]
         vplan_date = vplan.vplanDate
@@ -77,9 +84,8 @@ def get_query(filter, neu = True, search = None ):
         lists = query_to_list(query_results)
         return (lists, vplan_date, None)
     else:
-        filter = filter + '__' + 'in'
-        query_filtered = vplan.vplanschuelerentry_set.filter(**{filter: search})
-        query_rest = vplan.vplanschuelerentry_set.exclude(**{filter: search})
+        query_filtered = vplan.vplanschuelerentry_set.filter(**filter)
+        query_rest = vplan.vplanschuelerentry_set.exclude(**filter)
 
         list_filtered = query_to_list(query_filtered)
         list_rest = query_to_list(query_rest)

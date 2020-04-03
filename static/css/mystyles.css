@@ -7,3 +7,15 @@
 .text-toggle[aria-expanded=true] .text-collapsed {
 	display: none;
 }
+.table-color-light-blue {
+	background-color: #c1fffd;
+}
+.table-hover .table-color-light-blue:hover {
+	background-color: #a5f8f6;
+}
+.table-color-light-blue th,
+.table-color-light-blue td,
+.table-color-light-blue thead th,
+.table-color-light-blue tbody + tbody {
+	border-color: #aae1df;
+}

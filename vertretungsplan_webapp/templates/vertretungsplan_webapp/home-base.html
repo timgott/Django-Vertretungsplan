@@ -2,21 +2,22 @@
 {% load user_tags %}
 
 {% block content %}
-    <h3>
+    <h3 class="mb-5">
         Willkommen, {{ user.username }}!
+
     </h3>
     <nav>
-        <div class = "nav nav-tabs mt-4" id = "nav-tab" role = "tablist">
+        <div class = "list-group list-group-horizontal-sm" id = "nav-tab" role = "tablist">
             {% if user|has_group:"schueler, lehrer" %}
-                <a class="nav-item nav-link active" id="vplan-tab" data-toggle="tab" href="#vplan" role="tab" aria-controls="vplan" aria-selected="true">Aktueller Vertretungsplan</a>
-                <a class="nav-item nav-link " id="vplan-a-tab" data-toggle="tab" href="#vplan-a" role="tab" aria-controls="vplan-a" aria-selected="false">Vorheriger Vertretungsplan</a>
+                <a class="list-group-item list-group-item-action flex-fill text-center active" id="vplan-tab" data-toggle="list" href="#vplan" role="tab" aria-controls="vplan" aria-selected="true">Aktueller Vertretungsplan</a>
+                <a class="list-group-item list-group-item-action flex-fill text-center" id="vplan-a-tab" data-toggle="list" href="#vplan-a" role="tab" aria-controls="vplan-a" aria-selected="false">Vorheriger Vertretungsplan</a>
             {% endif %}
             {% if user|has_group:"lehrer" %}
-                <a class="nav-item nav-link" id="vplan-l-tab" data-toggle="tab" href="#vplan-l" role="tab" aria-controls="vplan-l" aria-selected="false">Lehrer Vertretungsplan</a>
+                <a class="list-group-item list-group-item-action flex-fill text-center" id="vplan-l-tab" data-toggle="list" href="#vplan-l" role="tab" aria-controls="vplan-l" aria-selected="false">Lehrer Vertretungsplan</a>
             {% endif %}
         </div>
     </nav>
-    <div class="tab-content mt-3" id="nav-tabContent">
+    <div class="tab-content mt-5" id="nav-tabContent">
         {% if user|has_group:"schueler, lehrer" %}
             <div class="tab-pane fade show active" id="vplan" role="tabpanel" aria-labelledby="vplan-tab">
                 {% block vplan %}
