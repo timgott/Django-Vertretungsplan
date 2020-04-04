@@ -1,5 +1,6 @@
 from django.contrib import admin
 
-from .models import Profile
+from .models import SchuelerProfile, LehrerProfile
 
-admin.site.register(Profile)
+admin.site.register(SchuelerProfile)
+admin.site.register(LehrerProfile)

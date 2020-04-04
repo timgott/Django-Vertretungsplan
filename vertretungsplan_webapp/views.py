@@ -45,7 +45,7 @@ def upload_file(request):
 
 @login_required
 def home(request):
-    filter_klasse = [request.user.profile.klasse]
+    filter_klasse = [request.user.schuelerprofile.klasse]
     kurs_filter = ['inf2']
     filter_dict = create_dict(['klasse', 'fach'], [filter_klasse, kurs_filter])
     vplan_filtered = []
