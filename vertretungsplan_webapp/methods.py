@@ -72,11 +72,11 @@ def get_filter(filter_dict):
 
 def get_query(filter, neu = True):
     if neu == True:
-        vplan = Vplan.objects.all().order_by('-vplanUploadDate')[0]
+        vplan = Vplan.objects.all().latest('vplanDate','vplanUploadDate')
         vplan_date = vplan.vplanDate
     else:
-        latest_vplan = Vplan.objects.all().latest('vplanUploadDate')
-        vplan = Vplan.objects.exclude(vplanDate__exact = latest_vplan.vplanDate).order_by('-vplanUploadDate')[0]
+        latest_vplan = Vplan.objects.all().latest('vplanDate','vplanUploadDate')
+        vplan = Vplan.objects.exclude(vplanDate__exact = latest_vplan.vplanDate).order_by('-vplanDate','-vplanUploadDate')[0]
         vplan_date = vplan.vplanDate
     
     if filter == None:
@@ -95,7 +95,7 @@ def create_dict(keys, values):
     dict = {}
     for key in keys:
         index = keys.index(key)
-        if values[index] != []:
+        if values[index] != [] and values[index] != ['']:
             dict[key] = values[index]
     dict = get_filter(dict)
     return dict

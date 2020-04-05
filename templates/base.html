@@ -1,146 +1,107 @@
 {% load static %}
 {% load user_tags %}
+{% load widget_tweaks %}
 <!doctype html>
 <html lang="de">
-  <head>
-    <!-- Copyright Per Göttlicher 2020 -->
-     
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <head>
+        <!-- Copyright Per Göttlicher 2020 -->
+        
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    
-    <link rel="stylesheet" href="{% static 'css/dropzone.css' %}">
-    <link rel="stylesheet" href="{% static 'css/mystyles.css' %}">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        
+        <link rel="stylesheet" href="{% static 'css/mystyles.css' %}">
+        
+        <style>
+            .footer {
+                background-color: #f5f5f5;
+            }
+        </style>
+        <title>{% block title %}Vertretungsplan{% endblock title %}</title>
+    </head>
+    <body class = "d-flex flex-column min-vh-100 ministry-teams">
+        <header class = "site-header">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class = "container">
+                    
+                    <a class="navbar-brand" href="{% url 'vplan-home' %}"><img src="{% static 'img/whglogo.svg' %}" width="30" height="30" class="d-inline-block align-top" alt="">Vertretungsplan</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                        <ul class="navbar-nav ml-auto">
+                            {% block nav-item %}
+                            {% endblock nav-item %}
 
-    <!--
-    <link rel="stylesheet" href="{% static "userManagement/css/style.css" %}">
-    <link rel="stylesheet" href="{% static "userManagement/css/jquery.dm-uploader.min.css" %}">
-    -->
-    
-    <style>
-        .footer {
-            background-color: #f5f5f5;
-        }
-    </style>
-
-    <title>{% block title %} Vertretungsplan {% endblock title %}</title>
-  </head>
-  <body class = "d-flex flex-column min-vh-100 ministry-teams">
-    <header class = "site-header">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class = "container">
-                
-                <a class="navbar-brand" href="{% url 'vplan-home' %}"><img src="{% static 'img/whglogo.svg' %}" width="30" height="30" class="d-inline-block align-top" alt="">Vertretungsplan</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                    <ul class="navbar-nav ml-auto">
-                        {% block nav-item %}
-                        {% endblock nav-item %}
-
-                        {% if user.is_authenticated %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
-                                    {{ user.username }}
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" href="{%url 'profile' %}">Daten ändern</a>
-                                    
-                                    {% if user|has_group:"uploader" %}
-                                        <a class="dropdown-item" href="{%url 'vplan-upload' %}">Vertretungsplan hochladen</a>
-                                    {% endif %}
-                                    
-                                    {% block nav-dropdown %}
-                                    {% endblock nav-dropdown %}
-                                    
-                                    {% if user.is_staff %}
-                                        <a class="dropdown-item" href="{%url 'admin:index' %}">Admin Panel</a>
-                                    {% endif %}
-                                    
-                                    <a class="dropdown-item" href="{%url 'logout' %}">Abmelden</a>
-                            </div>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-        </nav>    
-    </header>
-    <main role = "main" class = "flex-shrink-0">
-        <div class="container mt-4">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class = "alert alert-{{ message.tags }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-            {% block content  %}
-            {% endblock content %}
-        </div>
-    </main>
-    <footer class="footer text-center mt-auto py-3" >
-        <div class="container">
-            <span class="text-muted" >
-                    {% now "Y" as current_year %} 
-                	Copyright © {{ current_year }} Per Göttlicher
-            </span>
-        </div>
-    </footer>
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
-    <script>window.jQuery || document.write('<script src="/docs/4.4/assets/js/vendor/jquery.slim.min.js"><\/script>')</script>
-    
-    <script src="{% static 'js/dropzone.js' %}"></script>
-    <script src="{% static 'js/my.js' %}"></script>
-
-    <script>
-        (function activateTabFromHash() { 
-            if (location.hash) { 
-                var tabLink = document.querySelector('a[href="' + location.hash + '"]'); 
-                if (!tabLink) {
-                        return false; 
-                    } 
-                tabLink.click(); 
-                if (location.hash) { 
-                    setTimeout(function() { 
-                        window.scrollTo(0, 0); 
-                    }, 1); 
-                } 
-            } 
-        })();
-    </script>
-    
-    <!--
-    <script src="{% static "js/demo-ui.js" %}"></script>
-    <script src="{% static "js/demo-config.js" %}"></script>
-
-    <script type="text/html" id="files-template">
-        <li class="media">
-            <div class="media-body mb-1">
-                <p class="mb-2">
-                    <strong>%%filename%%</strong> - Status: <span class="text-muted">Waiting</span>
-                </p>
-                <div class="progress mb-2">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
-                        role="progressbar"
-                        style="width: 0%" 
-                        aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            {% if user.is_authenticated %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
+                                        {{ user.username }}
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                                        <a class="dropdown-item" href="{%url 'profile' %}">Daten ändern</a>
+                                        
+                                        {% if user|has_group:"uploader" %}
+                                            <a class="dropdown-item" href="{%url 'vplan-upload' %}">Vertretungsplan hochladen</a>
+                                        {% endif %}
+                                        
+                                        {% block nav-dropdown %}
+                                        {% endblock nav-dropdown %}
+                                        
+                                        {% if user.is_staff %}
+                                            <a class="dropdown-item" href="{%url 'admin:index' %}">Admin Panel</a>
+                                        {% endif %}
+                                        
+                                        <a class="dropdown-item" href="{%url 'logout' %}">Abmelden</a>
+                                </div>
+                            </li>
+                            {% endif %}
+                        </ul>
                     </div>
                 </div>
-                <hr class="mt-1 mb-1" />
+            </nav>    
+        </header>
+        <main role = "main" class = "flex-shrink-0">
+            <div class="container mt-4">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class = "alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                {% block content  %}
+                {% endblock content %}
             </div>
-        </li>
-    </script>
-    -->
-</body>
+        </main>
+        <footer class="footer text-center mt-auto py-3" >
+            <div class="container">
+                <span class="text-muted" >
+                        {% now "Y" as current_year %} 
+                        Copyright © {{ current_year }} Per Göttlicher
+                        <a class = "text-muted ml-5" href = "https://github.com/Atlasfreak/Django-Vertretungsplan"><i data-feather="github" height = "19" width="19" stroke-width="3"></i>Github</a>
+                </span>
+            </div>
+        </footer>
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        
+        <!-- Feather Icons -->
+        <script src="https://unpkg.com/feather-icons"></script>
+        <script>
+            feather.replace()
+        </script>
+        
+        <script>window.jQuery || document.write('<script src="/docs/4.4/assets/js/vendor/jquery.slim.min.js"><\/script>')</script>
+        
+        <script src="{% static 'js/my.js' %}"></script>
+        
+    </body>
 </html>

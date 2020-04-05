@@ -46,17 +46,17 @@ def upload_file(request):
 @login_required
 def home(request):
     filter_klasse = [request.user.schuelerprofile.klasse]
-    kurs_filter = ['inf2']
+    kurs_filter = [request.user.schuelerprofile.kurse]
     filter_dict = create_dict(['klasse', 'fach'], [filter_klasse, kurs_filter])
     vplan_filtered = []
     if filter_klasse != []:
         vplan, vplan_date, vplan_filtered = get_query(filter=filter_dict, neu = True)
         vplan_a, vplan_a_date, vplan_a_filtered = get_query(filter=filter_dict, neu = False)
-            
+
     else:
         vplan, vplan_date, vplan_filtered = get_query(neu = True)
         vplan_a, vplan_a_date, vplan_a_filtered = get_query(neu = False)
- 
+
     context = {
         'vplan': vplan,
         'vplan_filtered': vplan_filtered,
