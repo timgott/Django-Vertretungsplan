@@ -1,10 +1,10 @@
 from django.db import models
 from customUser.models import SiteUser
 
-from .validators import UnicodeClassValidator
+from .validators import class_validator
 
 class SchuelerProfile(models.Model):
-    validator = UnicodeClassValidator()
+    validator = class_validator
     user = models.OneToOneField(SiteUser, on_delete=models.CASCADE)
     klasse = models.CharField(max_length = 3, 
         verbose_name= 'Klasse',

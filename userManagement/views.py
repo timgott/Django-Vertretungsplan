@@ -12,7 +12,8 @@ from django.views.decorators.csrf import csrf_protect
 
 from customUser.forms import UserCreationForm
 
-from .forms import UserUpdateForm, ProfileUpdateForm
+from .forms import UserUpdateForm, SchuelerProfileUpdateForm
+from .models import SchuelerProfile
 
 
 def register(request):
@@ -21,7 +22,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             username = form.cleaned_data.get('username')
-
+            SchuelerProfile.objects.create(user=user)
             group = Group.objects.get(name='schueler')
             user.groups.add(group)
 
@@ -48,10 +49,10 @@ def profile(request):
     active_tab = 'username-mail'
     if request.method == 'POST':
         
-
         if 'u_form' in request.POST:
-            p_form = ProfileUpdateForm(request.POST, instance = request.user.profile)
+            p_form = SchuelerProfileUpdateForm(request.POST, instance = request.user.schuelerprofile)
             u_form = UserUpdateForm(request.POST, instance=request.user)
+            print(request.POST)
             if u_form.is_valid():
                 u_form.save()
             if p_form.is_valid():
@@ -71,11 +72,11 @@ def profile(request):
             else:
                 active_tab = 'change-password'
             u_form = UserUpdateForm(instance=request.user)
-            p_form = ProfileUpdateForm(request.POST, instance = request.user.profile)
+            p_form = SchuelerProfileUpdateForm(instance = request.user.schuelerprofile)
 
     else:
         u_form = UserUpdateForm(instance=request.user)
-        p_form = ProfileUpdateForm(instance = request.user.profile)
+        p_form = SchuelerProfileUpdateForm(instance = request.user.schuelerprofile)#instance = request.user.schuelerprofile
         p_c_form = PasswordChangeForm(request.user)
     
     context = {
