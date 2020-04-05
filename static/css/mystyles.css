@@ -19,3 +19,6 @@
 .table-color-light-blue tbody + tbody {
 	border-color: #aae1df;
 }
+.hidden {
+	display: none;
+}

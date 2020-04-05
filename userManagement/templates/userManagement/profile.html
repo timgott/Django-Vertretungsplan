@@ -1,6 +1,6 @@
 {% extends "userManagement/profile-base.html" %}
 {% load crispy_forms_tags %}
-
+{% load widget_tweaks %}
 
 {% block username-mail %}
     <form method="POST" enctype="multipart/form-data">
@@ -10,14 +10,36 @@
                 Profil
             </legend>
             {{ u_form|crispy }}
-            {{ p_form|crispy }}
+            <label for="{{ p_form.klasse.id_for_label }}">{{ p_form.klasse.html_name|capfirst  }}</label>
+            {% with WIDGET_ERROR_CLASS='is-invalid' %}
+                {% render_field p_form.klasse type="text" class="form-control show-control" placeholder="Deine Klasse bzw. Stufe"%}
+            {% endwith %}
+            <div class="invalid-feedback">
+                {% for error in p_form.klasse.errors %}
+                    {{error}}
+                {% endfor %}
+            </div>
+            <div class = "input-group control-group after-add-more show-field hidden mt-3">
+                {% render_field p_form.kurse value="" type="text" class="form-control" placeholder="Dein Kurs" aria-describedby="button-addon2"%}
+                <div class="input-group-append">
+                    <button class="btn btn-outline-success add-more" type="button" id="button-addon2"><i data-feather="plus" height = "19" width="19" stroke-width="3"></i> Add</button>
+                </div>
+            </div>
         </fieldset>
         <div class = "form-group">
             <button class = "btn btn-outline-info" type = "submit" name = "u_form">
                 Aktualisieren
             </button>
         </div>
-    </form>     
+    </form>
+    <div class="copy" style="display: none;">
+        <div class = "input-group control-group mt-3">
+            {% render_field p_form.kurse value="" type="text" class="form-control" placeholder="Dein Kurs" aria-describedby="button-addon2"%}
+            <div class="input-group-append">
+                <button class="btn btn-outline-danger remove" type="button" id="button-addon2"><i data-feather="x" height = "19" width="19" stroke-width="3"></i> Remove</button>
+            </div>
+        </div>
+    </div>     
 {% endblock username-mail %}
 {% block change-password %}
     <form method="POST">
