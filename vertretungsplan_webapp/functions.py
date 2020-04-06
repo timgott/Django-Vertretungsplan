@@ -71,14 +71,14 @@ def get_filter(filter_dict):
     return filter_dict
 
 def get_query(filter, neu = True):
+    latest_vplan = Vplan.objects.all().latest('vplanDate','vplanUploadDate')
     if neu == True:
-        vplan = Vplan.objects.all().latest('vplanDate','vplanUploadDate')
+        vplan = latest_vplan
         vplan_date = vplan.vplanDate
     else:
-        latest_vplan = Vplan.objects.all().latest('vplanDate','vplanUploadDate')
         vplan = Vplan.objects.exclude(vplanDate__exact = latest_vplan.vplanDate).order_by('-vplanDate','-vplanUploadDate')[0]
         vplan_date = vplan.vplanDate
-    
+
     if filter == None:
         query_results = vplan.vplanschuelerentry_set.all()
         lists = query_to_list(query_results)
