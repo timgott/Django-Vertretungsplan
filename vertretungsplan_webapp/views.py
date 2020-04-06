@@ -12,7 +12,7 @@ from userManagement.decorators import allowed_users
 from .forms import VplanUpdateForm
 from .models import Vplan, VplanSchuelerEntry
 
-from .methods import get_query, post_table, get_filter, create_dict
+from .functions import get_query, post_table, get_filter, create_dict
 from .vplan_parser import convertPDF
 
 @allowed_users(allowed_roles=['uploader'], redirect_url='vplan-home')
