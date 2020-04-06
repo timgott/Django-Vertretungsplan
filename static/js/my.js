@@ -7,19 +7,23 @@ function show_field(value){
     }
 };
 
+var counter = 0
+
 $(document).ready(function() {
     // from stackoverflow
     $(".add-more").click(function(){ 
+        if (counter < 12) {
+            var html = $(".copy").html();
 
-        var html = $(".copy").html();
-
-        $(".after-add-more").after(html);
-
+            $(".after-add-more").after(html);
+            counter ++;
+        };
     });
 
     $("body").on("click",".remove",function(){ 
 
         $(this).parents(".control-group").remove();
+        counter --;
 
     });
 
