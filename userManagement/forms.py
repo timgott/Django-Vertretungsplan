@@ -8,7 +8,6 @@ from .models import SchuelerProfile
 from .validators import class_validator
 
 class SchuelerProfileUpdateForm(forms.ModelForm):
-    klasse = forms.CharField(validators=[class_validator])
     class Meta:
         model = SchuelerProfile
         fields = ['klasse', 'kurse']
