@@ -1,3 +1,5 @@
+import ast
+
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import logout as auth_logout, update_session_auth_hash
@@ -14,7 +16,7 @@ from customUser.forms import UserCreationForm
 
 from .forms import UserUpdateForm, SchuelerProfileUpdateForm
 from .models import SchuelerProfile
-
+from .functions import create_dict
 
 def register(request):
     if request.method == 'POST':
@@ -50,13 +52,13 @@ def profile(request):
     if request.method == 'POST':
         
         if 'u_form' in request.POST:
-            p_form = SchuelerProfileUpdateForm(request.POST, instance = request.user.schuelerprofile)
+            post_dict = create_dict(request.POST)
+            p_form = SchuelerProfileUpdateForm(post_dict, instance = request.user.schuelerprofile)
             u_form = UserUpdateForm(request.POST, instance=request.user)
-            print(request.POST)
             if u_form.is_valid():
                 u_form.save()
             if p_form.is_valid():
-                p_form.save()        
+                p_form.save()
             p_c_form = PasswordChangeForm(request.user)
             active_tab = 'username-mail'
 
@@ -78,12 +80,18 @@ def profile(request):
         u_form = UserUpdateForm(instance=request.user)
         p_form = SchuelerProfileUpdateForm(instance = request.user.schuelerprofile)#instance = request.user.schuelerprofile
         p_c_form = PasswordChangeForm(request.user)
-    
+
+    if request.user.schuelerprofile.kurse != '':
+        kurse_list = ast.literal_eval(request.user.schuelerprofile.kurse)
+    else:
+        kurse_list = None
+
     context = {
         'u_form': u_form,
         'p_form': p_form,
         'p_c_form': p_c_form,
         'active_tab': active_tab,
+        'kurse_list': kurse_list,
     }
 
     return render(request, 'userManagement/profile.html', context)
