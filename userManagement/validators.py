@@ -1,4 +1,5 @@
 import re
+import ast
 
 from django.core import validators
 from django.utils.deconstruct import deconstructible
@@ -27,6 +28,23 @@ def class_validator(value):
                         raise ValidationError(message, code, params)
                 elif int(value) > 10:
                     raise ValidationError(message, code, params)
+            except:
+                raise ValidationError(message, code, params)
+
+def kurs_validator(value):
+    message = '%(value)s ist kein valider Kurs!'
+    code = 'invalid'
+    params = {'value': value}
+    value = ast.literal_eval(value)
+    for val in value:
+        if type(val) is not str:
+            raise ValidationError(message, code, params)
+        else:
+            try: 
+                if type(int(val[-1])) is int:
+                    for i in val[0:-1]:
+                        if not (i.isalpha() or i == '/'):
+                            raise ValidationError(message, code, params)
             except:
                 raise ValidationError(message, code, params)
 
