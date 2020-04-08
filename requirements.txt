@@ -1,0 +1,8 @@
+Requirements:
+
+Python 3.8 or higher
+
+Django 3.0.2 or higher
+widget_tweaks
+crispy_forms
+pdfminer
