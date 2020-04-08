@@ -5,7 +5,6 @@ from django.conf import settings
 from customUser.models import SiteUser
 
 from .models import SchuelerProfile
-from .validators import class_validator
 
 class SchuelerProfileUpdateForm(forms.ModelForm):
     class Meta:
