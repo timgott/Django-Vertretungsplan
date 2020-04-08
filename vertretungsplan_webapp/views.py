@@ -57,7 +57,7 @@ def home(request):
     filter_dict = create_dict(['klasse', 'fach'], [filter_klasse, kurs_filter])
     vplan_filtered = []
     
-    if filter_klasse != []:
+    if filter_klasse != [] and filter_klasse != ['']:
         vplan, vplan_date, vplan_filtered = get_query(filter=filter_dict, neu = True)
         vplan_a, vplan_a_date, vplan_a_filtered = get_query(filter=filter_dict, neu = False)
 
