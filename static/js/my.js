@@ -1,4 +1,4 @@
-// custom ja functions
+// custom js functions
 function show_field(value){
     if (value >= 11 && value <= 13) {
         $(".show-field").removeClass('hidden');
@@ -7,7 +7,7 @@ function show_field(value){
     }
 };
 
-var counter = 0
+
 
 $(document).ready(function() {
     // from stackoverflow
