@@ -4,7 +4,12 @@ from django.conf import settings
 
 from customUser.models import SiteUser
 
-from .models import Profile
+from .models import SchuelerProfile
+
+class SchuelerProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = SchuelerProfile
+        fields = ['klasse', 'kurse']
 
 class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField()
@@ -13,7 +18,3 @@ class UserUpdateForm(forms.ModelForm):
         model = SiteUser
         fields = ['username', 'email']
 
-class ProfileUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['klasse', 'kurs']

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
-
+{% block title %}Anmelden - {{block.super}}{% endblock title %}
 {% block nav-item %}
     <li class="nav-item">
         <a class="nav-link" href="{%url 'register' %}">Registrieren</a>

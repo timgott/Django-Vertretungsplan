@@ -1,0 +1,24 @@
+{% if date is not None %}
+    <h4>Vertretungsplan für {{ date|date:"l d. F Y" }}</h4>
+    <hr>
+{% endif %}
+
+{% if filtered is None %}
+    {% include "vertretungsplan_webapp/home-table.html" with list=vplan %}
+{% else %}
+    <div class="card mb-3">
+        <div class="card-header">
+            Deine Fächer:
+        </div>
+        <div class="card-body">
+            {% include "vertretungsplan_webapp/home-table.html" with list=filtered %}
+        </div>
+    </div>
+    <div class="collapse" id="collapseVplan">
+        {% include "vertretungsplan_webapp/home-table.html" with list=vplan %}
+    </div>
+    <button class="text-toggle btn btn-outline-info mb-4" type="button" data-toggle="collapse" data-target="#collapseVplan" aria-expanded="false" aria-controls="collapseVplan">
+        <span class = "text-collapsed"><i data-feather="chevron-down" height = "19" width="19" stroke-width="3"></i> Mehr Anzeigen</span>
+        <span class = "text-expanded"><i data-feather="chevron-up" height = "19" width="19" stroke-width="3"></i> Weniger Anzeigen</span>
+    </button>    
+{% endif %}

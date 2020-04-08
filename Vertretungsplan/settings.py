@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'vertretungsplan_webapp.apps.VertretungsplanWebappConfig',
     'userManagement.apps.UsermanagementConfig',
     'crispy_forms',
+    'widget_tweaks',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -1,11 +1,11 @@
 {% extends "vertretungsplan_webapp/home-base.html" %}
 
 {% block vplan %}
-    {% include "vertretungsplan_webapp/home-vplan.html" with list=vplan date=vplan_date %}
+    {% include "vertretungsplan_webapp/home-filter.html" with filtered=vplan_filtered vplan=vplan date=vplan_date %}
 {% endblock vplan %}
 
 {% block vplan_a %}
-    {% include "vertretungsplan_webapp/home-vplan.html" with list=vplan_a date=vplan_a_date %}
+    {% include "vertretungsplan_webapp/home-filter.html" with filtered=vplan_a_filtered vplan=vplan_a date=vplan_a_date %}
 {% endblock vplan_a %}
 
 {% block vplan_L %}

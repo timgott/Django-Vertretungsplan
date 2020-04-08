@@ -21,12 +21,36 @@ from .forms import (
     AdminPasswordChangeForm, UserChangeForm, UserCreationForm,
 )
 
+from userManagement.models import SchuelerProfile, LehrerProfile
 
 csrf_protect_m = method_decorator(csrf_protect)
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 
 
+def change_group(model, queryset, group_name):       
+    group = Group.objects.get(name=group_name)
+    rows_updated = 0
+    for i in queryset:
+        i.groups.clear()
+        group.user_set.add(i)
+        rows_updated += 1
+    if rows_updated == 1:
+        message_part = '1 Benutzer wurde'
+    else:
+        message_part = f'{rows_updated} Benutzer wurden'
+    return f'{message_part} die Gruppe {group_name} zugeteilt.'
 
+def add_group(model, queryset, group_name):
+    group = Group.objects.get(name=group_name)
+    rows_updated = 0
+    for i in queryset:
+        group.user_set.add(i)
+        rows_updated += 1
+    if rows_updated == 1:
+        message_part = '1 Benutzer wurde'
+    else:
+        message_part = f'{rows_updated} Benutzer wurden'
+    return f'{message_part} die Gruppe {group_name} hinzugefügt.'
 
 class UserAdmin(admin.ModelAdmin):
     add_form_template = 'admin/auth/user/add_form.html'
@@ -53,8 +77,7 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ('username', 'email')
     ordering = ('username',)
     filter_horizontal = ('groups', 'user_permissions',)
-    actions = ['change_active_action']
-
+    actions = ['change_active_action','change_group_lehrer_action','change_group_admin_action','add_group_uploader_action',]
 
     def change_active_action(self, request, queryset):
         rows_updated = queryset.update(is_active = True)
@@ -65,6 +88,29 @@ class UserAdmin(admin.ModelAdmin):
         self.message_user(request, f'{message_part} aktiviert.')
     
     change_active_action.short_description = 'Ausgewählte Benutzer aktivieren' 
+
+    def change_group_lehrer_action(self, request, queryset,):
+        for i in queryset:
+            if SchuelerProfile.objects.filter(user=i):
+                i.schuelerprofile.delete()
+            LehrerProfile.objects.create(user=i)
+        message = change_group(self, queryset, 'lehrer')
+        self.message_user(request, message)
+
+    change_group_lehrer_action.short_description = 'Ausgewählten Benutzer die Gruppe Lehrer zuteilen'
+
+    def change_group_admin_action(self, request, queryset):
+        queryset.update(is_staff = True, is_superuser = True)
+        message = change_group(self, queryset, 'admin')
+        self.message_user(request, message)
+
+    change_group_admin_action.short_description = 'Ausgewählten Benutzer die Gruppe Admin zuteilen'
+
+    def add_group_uploader_action(self, request, queryset):
+        message = add_group(self, queryset, 'uploader')
+        self.message_user(request, message)
+
+    add_group_uploader_action.short_description = 'Ausgewählten Benutzer die Gruppe Uploader zuteilen'
 
     def get_fieldsets(self, request, obj=None):
         if not obj:

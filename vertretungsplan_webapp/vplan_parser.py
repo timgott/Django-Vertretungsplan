@@ -9,7 +9,7 @@ import sqlite3
 def convertPDF(pdf_name):
     # global pages
     # global table
-    pages = list(pdfminer.high_level.extract_pages(pdf_name, laparams=LAParams(line_margin=0.3)))
+    pages = list(pdfminer.high_level.extract_pages(pdf_name, laparams=LAParams(line_margin=0.0001)))
 
     rows = extractRows(pages)
     tables = rowsToTables(rows)

@@ -1,3 +1,5 @@
+import ast
+
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import logout as auth_logout, update_session_auth_hash
@@ -12,8 +14,9 @@ from django.views.decorators.csrf import csrf_protect
 
 from customUser.forms import UserCreationForm
 
-from .forms import UserUpdateForm, ProfileUpdateForm
-
+from .forms import UserUpdateForm, SchuelerProfileUpdateForm
+from .models import SchuelerProfile
+from .functions import create_dict
 
 def register(request):
     if request.method == 'POST':
@@ -21,7 +24,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             username = form.cleaned_data.get('username')
-
+            SchuelerProfile.objects.create(user=user)
             group = Group.objects.get(name='schueler')
             user.groups.add(group)
 
@@ -48,14 +51,14 @@ def profile(request):
     active_tab = 'username-mail'
     if request.method == 'POST':
         
-
         if 'u_form' in request.POST:
-            p_form = ProfileUpdateForm(request.POST, instance = request.user.profile)
+            post_dict = create_dict(request.POST)
+            p_form = SchuelerProfileUpdateForm(post_dict, instance = request.user.schuelerprofile)
             u_form = UserUpdateForm(request.POST, instance=request.user)
             if u_form.is_valid():
                 u_form.save()
             if p_form.is_valid():
-                p_form.save()        
+                p_form.save()
             p_c_form = PasswordChangeForm(request.user)
             active_tab = 'username-mail'
 
@@ -71,18 +74,24 @@ def profile(request):
             else:
                 active_tab = 'change-password'
             u_form = UserUpdateForm(instance=request.user)
-            p_form = ProfileUpdateForm(request.POST, instance = request.user.profile)
+            p_form = SchuelerProfileUpdateForm(instance = request.user.schuelerprofile)
 
     else:
         u_form = UserUpdateForm(instance=request.user)
-        p_form = ProfileUpdateForm(instance = request.user.profile)
+        p_form = SchuelerProfileUpdateForm(instance = request.user.schuelerprofile)#instance = request.user.schuelerprofile
         p_c_form = PasswordChangeForm(request.user)
-    
+
+    if request.user.schuelerprofile.kurse != '':
+        kurse_list = ast.literal_eval(request.user.schuelerprofile.kurse)
+    else:
+        kurse_list = None
+
     context = {
         'u_form': u_form,
         'p_form': p_form,
         'p_c_form': p_c_form,
         'active_tab': active_tab,
+        'kurse_list': kurse_list,
     }
 
     return render(request, 'userManagement/profile.html', context)

@@ -12,8 +12,10 @@ from userManagement.decorators import allowed_users
 from .forms import VplanUpdateForm
 from .models import Vplan, VplanSchuelerEntry
 
-from .methods import get_query, post_table
+from .functions import get_query, post_table, get_filter, create_dict
 from .vplan_parser import convertPDF
+
+import ast
 
 @allowed_users(allowed_roles=['uploader'], redirect_url='vplan-home')
 @login_required
@@ -45,14 +47,31 @@ def upload_file(request):
 
 @login_required
 def home(request):
-    filter_klasse = ['13','11','12']
-    vplan, vplan_date = get_query(neu = True)
-    vplan_a, vplan_a_date = get_query(neu = False)
+    filter_klasse = [request.user.schuelerprofile.klasse]
+    
+    if request.user.schuelerprofile.kurse != '':
+        kurs_filter = ast.literal_eval(request.user.schuelerprofile.kurse)
+    else:
+        kurs_filter = []
+    
+    filter_dict = create_dict(['klasse', 'fach'], [filter_klasse, kurs_filter])
+    vplan_filtered = []
+    
+    if filter_klasse != []:
+        vplan, vplan_date, vplan_filtered = get_query(filter=filter_dict, neu = True)
+        vplan_a, vplan_a_date, vplan_a_filtered = get_query(filter=filter_dict, neu = False)
+
+    else:
+        vplan, vplan_date, vplan_filtered = get_query(neu = True)
+        vplan_a, vplan_a_date, vplan_a_filtered = get_query(neu = False)
+    
     context = {
-        'filter_klasse': filter_klasse,
         'vplan': vplan,
+        'vplan_filtered': vplan_filtered,
         'vplan_date': vplan_date,
         'vplan_a': vplan_a,
+        'vplan_a_filtered': vplan_a_filtered,
         'vplan_a_date': vplan_a_date,
+        'kurs_filter': kurs_filter,
     }
     return render(request, 'vertretungsplan_webapp/home.html', context)

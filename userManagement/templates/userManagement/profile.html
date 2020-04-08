@@ -1,24 +1,27 @@
 {% extends "userManagement/profile-base.html" %}
 {% load crispy_forms_tags %}
-
+{% load widget_tweaks %}
 
 {% block username-mail %}
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <fieldset class = "form-group">
             <legend class = "border-bottom mb-4">
-                Profil
+                Name/E-Mail ändern
             </legend>
             {{ u_form|crispy }}
-            {{ p_form|crispy }}
         </fieldset>
         <div class = "form-group">
             <button class = "btn btn-outline-info" type = "submit" name = "u_form">
                 Aktualisieren
             </button>
         </div>
-    </form>        
+    </form>
+    <div class="copy hidden">
+        {% include 'userManagement/profile-kurs-input.html' with icon='x' button_message='Feld entfernen' %}
+    </div>
 {% endblock username-mail %}
+
 {% block change-password %}
     <form method="POST">
         {% csrf_token %}
@@ -36,3 +39,56 @@
     </form>
 {% endblock change-password %}
 
+{% block change-class %}
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class = "form-group">
+            <legend class = "border-bottom mb-4">
+                Klasse/Kurs ändern
+            </legend>
+
+            <!-- Klasse Eingabe -->
+            <label for="{{ p_form.klasse.id_for_label }}">{{ p_form.klasse.html_name|capfirst  }}</label>
+            {% with WIDGET_ERROR_CLASS='is-invalid' %}
+                {% render_field p_form.klasse type="text" class="form-control show-control" placeholder="Deine Klasse bzw. Stufe"%}
+            {% endwith %}
+            <div class="invalid-feedback">
+                {% for error in p_form.klasse.errors %}
+                    {{error}}
+                {% endfor %}
+            </div>
+            <small class="form-text text-muted">{{p_form.klasse.help_text}}</small>
+
+            <!-- Kurs Eingabe -->
+            <label class="mt-3 show-field" for="{{ p_form.kurse.id_for_label }}">{{ p_form.kurse.html_name|capfirst  }}</label>
+            
+            {% if p_form.kurse.errors %}
+                <span class="badge badge-danger">
+                    Überprüfe bitte nochmal deine Eingabe!
+                </span>
+            {% endif %}
+
+            <div class="after-add-more">
+                {% if kurse_list is not None %}
+                    {% include 'userManagement/profile-kurs-input.html' with icon='plus' button_message='Feld hinzufügen' val=kurse_list|first %}
+
+                    {% for i in kurse_list|slice:'1:' %}
+                        <script>counter ++;</script>
+                        {% include 'userManagement/profile-kurs-input.html' with icon='x' button_message='Feld entfernen' val=i %}
+                    {% endfor %}
+
+                {% else %}
+                    {% include 'userManagement/profile-kurs-input.html' with icon='plus' button_message='Feld hinzufügen' %}
+                {% endif %}
+            </div>
+            
+        </fieldset>
+
+        <div class = "form-group">
+            <button class = "btn btn-outline-info" type = "submit" name = "u_form">
+                Klasse/Kurs aktualisieren
+            </button>
+        </div>
+
+    </form>
+{% endblock change-class %}
