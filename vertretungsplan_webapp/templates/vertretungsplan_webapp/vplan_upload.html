@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+{% load widget_tweaks %}
 
 {% block content %}
     <form method="POST" enctype="multipart/form-data">
@@ -8,7 +9,13 @@
             <legend class = "border-bottom mb-4">
                 Vplan Hochladen
             </legend>
-            {{ form|crispy }}
+            <!--
+            {{form|crispy}}
+            -->
+            <div class="custom-file">
+                {% render_field form.file type="file" class="custom-file-input" %}
+                <label for="{{ form.file.id_for_label }}" class="custom-file-label" data-browse="Durchsuchen">Vertretungsplan hochladen</label>
+            </div>
         </fieldset>
         <div class = "form-group">
             <button class = "btn btn-outline-info" type = "submit">
