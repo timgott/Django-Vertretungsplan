@@ -52,15 +52,21 @@ def profile(request):
     if request.method == 'POST':
         
         if 'u_form' in request.POST:
-            post_dict = create_dict(request.POST)
-            p_form = SchuelerProfileUpdateForm(post_dict, instance = request.user.schuelerprofile)
             u_form = UserUpdateForm(request.POST, instance=request.user)
             if u_form.is_valid():
                 u_form.save()
+            p_c_form = PasswordChangeForm(request.user)
+            p_form = SchuelerProfileUpdateForm(instance = request.user.schuelerprofile)
+            active_tab = 'username-mail'
+
+        elif 'p_form' in request.POST:
+            post_dict = create_dict(request.POST)
+            p_form = SchuelerProfileUpdateForm(post_dict, instance = request.user.schuelerprofile)
             if p_form.is_valid():
                 p_form.save()
             p_c_form = PasswordChangeForm(request.user)
-            active_tab = 'username-mail'
+            u_form = UserUpdateForm(instance=request.user)
+            active_tab = 'change-class'
 
         elif 'p_c_form' in request.POST:
             p_c_form = PasswordChangeForm(request.user, request.POST)
