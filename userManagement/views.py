@@ -17,6 +17,8 @@ from customUser.forms import UserCreationForm
 from .forms import UserUpdateForm, SchuelerProfileUpdateForm
 from .models import SchuelerProfile
 from .functions import create_dict
+from .decorators import (allowed_users, has_profile)
+
 
 def register(request):
     if request.method == 'POST':
@@ -46,6 +48,7 @@ def logout(request):
 
 
 @csrf_protect
+@has_profile(redirect_url = 'logout')
 @login_required
 def profile(request):
     active_tab = 'username-mail'

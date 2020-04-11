@@ -3,7 +3,6 @@
 # %%
 import pdfminer.high_level;
 from pdfminer.layout import *;
-import sqlite3
 
 # %%
 def convertPDF(pdf_name):
