@@ -64,7 +64,10 @@
             
             {% if p_form.kurse.errors %}
                 <span class="badge badge-danger">
-                    Überprüfe bitte nochmal deine Eingabe!
+                    <i data-feather="alert-triangle" height = "14" width="14" stroke-width="3"></i> 
+                    <span style="vertical-align:middle" >
+                        Überprüfe bitte nochmal deine Eingabe!
+                    </span>
                 </span>
             {% endif %}
 
@@ -85,7 +88,7 @@
         </fieldset>
 
         <div class = "form-group">
-            <button class = "btn btn-outline-info" type = "submit" name = "u_form">
+            <button class = "btn btn-outline-info" type = "submit" name = "p_form">
                 Klasse/Kurs aktualisieren
             </button>
         </div>

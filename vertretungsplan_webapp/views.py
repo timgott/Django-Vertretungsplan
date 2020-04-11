@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.utils import timezone
 
-from userManagement.decorators import allowed_users
+from userManagement.decorators import (allowed_users, has_profile)
 
 from .forms import VplanUpdateForm
 from .models import Vplan, VplanSchuelerEntry
@@ -45,6 +45,7 @@ def upload_file(request):
         form = VplanUpdateForm()
     return render(request, 'vertretungsplan_webapp/vplan_upload.html', {'form': form})
 
+@has_profile(redirect_url = 'logout')
 @login_required
 def home(request):
     filter_klasse = [request.user.schuelerprofile.klasse]
@@ -57,7 +58,7 @@ def home(request):
     filter_dict = create_dict(['klasse', 'fach'], [filter_klasse, kurs_filter])
     vplan_filtered = []
     
-    if filter_klasse != []:
+    if filter_klasse != [] and filter_klasse != ['']:
         vplan, vplan_date, vplan_filtered = get_query(filter=filter_dict, neu = True)
         vplan_a, vplan_a_date, vplan_a_filtered = get_query(filter=filter_dict, neu = False)
 

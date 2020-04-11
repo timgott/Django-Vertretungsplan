@@ -70,7 +70,7 @@ def get_filter(filter_dict):
         filter_dict[new_key] = filter_dict.pop(key)
     return filter_dict
 
-def get_query(filter, neu = True):
+def get_query(filter=None, neu = True):
     latest_vplan = Vplan.objects.all().latest('vplanDate','vplanUploadDate')
     if neu == True:
         vplan = latest_vplan

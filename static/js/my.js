@@ -27,6 +27,8 @@ $(document).ready(function() {
 
     });
 
+    bsCustomFileInput.init()
+
     // custom jQuery script
     show_field($(".show-control").val());
 

@@ -1,7 +1,7 @@
 <div class=" {% if icon == 'plus' %} show-field hidden {% else %} mt-3 control-group{% endif %} ">
     <div class = "input-group ">
           
-        <input type="text" class="form-control" id="id_kurse" placeholder="Einer deiner Kurse, achte auf Groß-/Kleinschreibung!" name="kurse" aria-describedby="button-addon2" maxlength="8" value="{{ val }}">
+        <input type="text" class="form-control" id="{{ p_form.kurse.id_for_label }}" placeholder="Einer deiner Kurse, achte auf Groß-/Kleinschreibung!" name="kurse" aria-describedby="button-addon2" maxlength="8" value="{{ val }}">
 
         <div class="input-group-append">
             <button class="btn btn-outline{% if icon == 'plus' %}-success add-more {% else %}-danger remove {% endif %} " type="button" id="button-addon2">
