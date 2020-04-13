@@ -1,33 +1,16 @@
-# To add a new cell, type '# %%'
-# To add a new markdown cell, type '# %% [markdown]'
-# %%
 import pdfminer.high_level;
 from pdfminer.layout import *;
-import sqlite3
 
-# %%
-def convertPDF(pdf_name):
-    # global pages
-    # global table
-    pages = list(pdfminer.high_level.extract_pages(pdf_name, laparams=LAParams(line_margin=0.0001)))
-
-    rows = extractRows(pages)
-    tables = rowsToTables(rows)
-    return tables
-
-# %%
 class RawRow:
     def __init__(self, y, items=[]):
         self.y = y
         self.items = items
-    
+
     def __str__(self):
         return "Row at " + str(self.y) + ": " + str(self.items)
 
-
 def get_cleaned_text(element):
     return element.get_text().splitlines()[0].strip()
-
 
 def extractRows(pages):
     def insertToRow(rows, item, ypos):
@@ -53,7 +36,6 @@ def extractRows(pages):
 
     return sorted(rows, key=lambda r: r.y)
 
-# %%
 class Table:
     def __init__(self, title, date, columns_x=[], headers = []):
         self.title = title
@@ -68,14 +50,14 @@ class Table:
             matchingColumnIndex = min(range(0, len(self.columns_x)), key=lambda i: abs(
                 self.columns_x[i] - element.x0))
             row[self.headers[matchingColumnIndex]] = get_cleaned_text(element)
-        
+
         self.rows.append(row)
         return row
 
     def __str__(self):
         row_strings = [",".join([key + "=" + row[key] for key in row]) for row in self.rows]
         return "Table: "+  " Date: " +  "\n" + "\n".join(row_strings)
-    # table.title
+
 def rowsToTables(rows):
     i = 0
     titles = []
@@ -101,6 +83,10 @@ def rowsToTables(rows):
 
     return tables
 
+def convertPDF(pdf_name):
+    
+    pages = list(pdfminer.high_level.extract_pages(pdf_name, laparams=LAParams(line_margin=0.0001)))
 
-# %%
-# convertPDF("getpdf.php.pdf", "C:\\Users\\Per\\Documents\\whgonline-random-zeug\\Django_Projekte\\Vertretungsplan\\db.sqlite3")
+    rows = extractRows(pages)
+    tables = rowsToTables(rows)
+    return tables
