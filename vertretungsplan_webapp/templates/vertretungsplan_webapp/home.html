@@ -9,5 +9,5 @@
 {% endblock vplan_a %}
 
 {% block vplan_L %}
-    <img src="http://vplan.whgonline.de/getpng.php?file=vplanL">
+    {% include "vertretungsplan_webapp/home-filter.html" with filtered=vplan_l_filtered vplan=vplan_l date=vplan_l_date lehrer=True %}
 {% endblock vplan_L %}
