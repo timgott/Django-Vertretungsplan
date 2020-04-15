@@ -17,6 +17,7 @@ from customUser.forms import UserCreationForm
 from .forms import UserUpdateForm, SchuelerProfileUpdateForm
 from .models import SchuelerProfile
 from .functions import create_dict
+from .decorators import has_profile
 
 def register(request):
     if request.method == 'POST':
@@ -44,7 +45,7 @@ def logout(request):
     messages.success(request, 'Sie wurden erfolgreich abgemeldet!')
     return redirect('login')
 
-
+@has_profile(redirect_url = 'logout')
 @csrf_protect
 @login_required
 def profile(request):
@@ -76,7 +77,7 @@ def profile(request):
                 # except the current one.
                 update_session_auth_hash(request, user)
                 messages.success(request, 'Ihr Passwort wurde erfolgreich geändert')
-                
+
             else:
                 active_tab = 'change-password'
             u_form = UserUpdateForm(instance=request.user)
@@ -84,7 +85,7 @@ def profile(request):
 
     else:
         u_form = UserUpdateForm(instance=request.user)
-        p_form = SchuelerProfileUpdateForm(instance = request.user.schuelerprofile)#instance = request.user.schuelerprofile
+        p_form = SchuelerProfileUpdateForm(instance = request.user.schuelerprofile)
         p_c_form = PasswordChangeForm(request.user)
 
     if request.user.schuelerprofile.kurse != '':
