@@ -44,7 +44,7 @@
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                                         <a class="dropdown-item" href="{%url 'profile' %}">Daten ändern</a>
                                         
-                                        {% if user|has_group:"uploader" %}
+                                        {% if user|has_group:"uploader, admin" %}
                                             <a class="dropdown-item" href="{%url 'vplan-upload' %}">Vertretungsplan hochladen</a>
                                         {% endif %}
                                         

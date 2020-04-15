@@ -8,17 +8,17 @@
     </h3>
     <nav>
         <div class = "list-group list-group-horizontal-sm" id = "nav-tab" role = "tablist">
-            {% if user|has_group:"schueler, lehrer" %}
+            {% if user|has_group:"schueler, lehrer, admin" %}
                 <a class="list-group-item list-group-item-action flex-fill text-center active" id="vplan-tab" data-toggle="list" href="#vplan" role="tab" aria-controls="vplan" aria-selected="true">Aktueller Vertretungsplan</a>
                 <a class="list-group-item list-group-item-action flex-fill text-center" id="vplan-a-tab" data-toggle="list" href="#vplan-a" role="tab" aria-controls="vplan-a" aria-selected="false">Vorheriger Vertretungsplan</a>
             {% endif %}
-            {% if user|has_group:"lehrer" %}
+            {% if user|has_group:"lehrer, admin" %}
                 <a class="list-group-item list-group-item-action flex-fill text-center" id="vplan-l-tab" data-toggle="list" href="#vplan-l" role="tab" aria-controls="vplan-l" aria-selected="false">Lehrer Vertretungsplan</a>
             {% endif %}
         </div>
     </nav>
     <div class="tab-content mt-5" id="nav-tabContent">
-        {% if user|has_group:"schueler, lehrer" %}
+        {% if user|has_group:"schueler, lehrer, admin" %}
             <div class="tab-pane fade show active" id="vplan" role="tabpanel" aria-labelledby="vplan-tab">
                 {% block vplan %}
                 {% endblock vplan %}
@@ -28,7 +28,7 @@
                 {% endblock vplan_a %}
             </div>
         {% endif %}
-        {% if user|has_group:"lehrer" %}
+        {% if user|has_group:"lehrer, admin" %}
             <div class="tab-pane fade" id="vplan-l" role="tabpanel" aria-labelledby="vplan-l-tab">
                 {% block vplan_L %}
                 {% endblock vplan_L %}
