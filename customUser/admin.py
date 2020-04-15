@@ -86,7 +86,7 @@ class UserAdmin(admin.ModelAdmin):
         else:
             message_part = f'{rows_updated} Benutzer wurden'
         self.message_user(request, f'{message_part} aktiviert.')
-    
+
     change_active_action.short_description = 'Ausgewählte Benutzer aktivieren' 
 
     def change_group_lehrer_action(self, request, queryset,):
@@ -99,12 +99,12 @@ class UserAdmin(admin.ModelAdmin):
 
     change_group_lehrer_action.short_description = 'Ausgewählten Benutzer die Gruppe Lehrer zuteilen'
 
-    def change_group_admin_action(self, request, queryset):
+    def add_group_admin_action(self, request, queryset):
         queryset.update(is_staff = True, is_superuser = True)
-        message = change_group(self, queryset, 'admin')
+        message = add_group(self, queryset, 'admin')
         self.message_user(request, message)
 
-    change_group_admin_action.short_description = 'Ausgewählten Benutzer die Gruppe Admin zuteilen'
+    add_group_admin_action.short_description = 'Ausgewählten Benutzer die Gruppe Admin zuteilen'
 
     def add_group_uploader_action(self, request, queryset):
         message = add_group(self, queryset, 'uploader')
