@@ -140,7 +140,7 @@ def get_vplan(user):
         filter_dict = create_dict(['klasse', 'fach'], [filter_klasse, kurs_filter])
     elif 'lehrer' in group_names:
         kuerzel_filter = [user.lehrerprofile.kuerzel]
-        filter_dict = create_dict(['kuerzel'], [kuerzel_filter])
+        filter_dict = create_dict(['lehrerName'], [kuerzel_filter])
         filter_klasse = []
     else:
         return (None, None, None, None, None, None, None, None, None, None)
@@ -164,6 +164,5 @@ def get_vplan(user):
     return (vplan, vplan_date, vplan_filtered,
         vplan_a, vplan_a_date, vplan_a_filtered,
         vplan_l, vplan_l_date, vplan_l_filtered,
-        kurs_filter
         )
 
