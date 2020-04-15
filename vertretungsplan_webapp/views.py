@@ -7,12 +7,12 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.utils import timezone
 
-from userManagement.decorators import allowed_users
+from userManagement.decorators import allowed_users, has_profile
 
 from .forms import VplanUpdateForm
-from .models import Vplan, VplanSchuelerEntry
+from .models import Vplan, VplanSchuelerEntry, VplanLehrerEntry
 
-from .functions import get_query, post_table, get_filter, create_dict
+from .functions import get_query, post_table, get_filter, create_dict, get_vplan
 from .vplan_parser import convertPDF
 
 import ast
@@ -30,41 +30,34 @@ def upload_file(request):
                 uploaded_file = f
                 file_name = uploaded_file.name
                 fs = FileSystemStorage()
-                
+
                 if fs.exists(file_name):
                     fs.delete(file_name)
                 fs.save(uploaded_file.name, uploaded_file)
 
                 file_path = f'media/{file_name}'
-                if 'vplan'in file_name.strip('.pdf') and '.pdf' in file_name.strip('vplan'):
+
+                if 'vplanL.pdf' == file_name:
+                    needed = ['Pos','Fach','Klasse','Raum','Art','Lehrer','LehrerName']
+                    post_table(file_path, VplanLehrerEntry, needed, vplan_type = 'lehrer')
+
+                elif 'vplan'in file_name.strip('.pdf') and '.pdf' in file_name.strip('vplan'):
                     needed = ['Pos','Fach','Klasse','Raum','Art','Info']
-                    post_table(file_path, VplanSchuelerEntry, needed)
-                
+                    post_table(file_path, VplanSchuelerEntry, needed, vplan_type = 'schueler')
+
+                else:
+                    messages.warning(request, 'Die Dateien konnten nicht konvertiert werden unverzüglich Admin kontaktieren!')
+
             messages.success(request, 'Die Dateien wurden erfolgreich hochgeladen!')
     else:
         form = VplanUpdateForm()
     return render(request, 'vertretungsplan_webapp/vplan_upload.html', {'form': form})
 
+@has_profile(redirect_url = 'logout')
 @login_required
 def home(request):
-    filter_klasse = [request.user.schuelerprofile.klasse]
-    
-    if request.user.schuelerprofile.kurse != '':
-        kurs_filter = ast.literal_eval(request.user.schuelerprofile.kurse)
-    else:
-        kurs_filter = []
-    
-    filter_dict = create_dict(['klasse', 'fach'], [filter_klasse, kurs_filter])
-    vplan_filtered = []
-    
-    if filter_klasse != [] and filter_klasse != ['']:
-        vplan, vplan_date, vplan_filtered = get_query(filter=filter_dict, neu = True)
-        vplan_a, vplan_a_date, vplan_a_filtered = get_query(filter=filter_dict, neu = False)
+    vplan, vplan_date, vplan_filtered, vplan_a, vplan_a_date, vplan_a_filtered, vplan_l, vplan_l_date, vplan_l_filtered, kurs_filter = get_vplan(request.user)
 
-    else:
-        vplan, vplan_date, vplan_filtered = get_query(neu = True)
-        vplan_a, vplan_a_date, vplan_a_filtered = get_query(neu = False)
-    
     context = {
         'vplan': vplan,
         'vplan_filtered': vplan_filtered,
@@ -73,5 +66,8 @@ def home(request):
         'vplan_a_filtered': vplan_a_filtered,
         'vplan_a_date': vplan_a_date,
         'kurs_filter': kurs_filter,
+        'vplan_l': vplan_l,
+        'vplan_l_date': vplan_l_date,
+        'vplan_l_filtered': vplan_l_filtered,
     }
     return render(request, 'vertretungsplan_webapp/home.html', context)
