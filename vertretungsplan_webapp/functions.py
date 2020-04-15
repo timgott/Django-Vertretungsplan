@@ -46,12 +46,14 @@ def post_table(file_path, model, needed, vplan_type):
             last_row = table.rows[last_row_index]
 
             fill_blanks(row, last_row, needed)
-            remove_not_needed(row, needed)
 
             if vplan_type == 'schueler':
                 row['Klasse'] = table.title
             elif vplan_type == 'lehrer':
+                row['Lehrer'] = row.pop('Lehrer Name')
                 row['LehrerName'] = table.title
+
+            remove_not_needed(row, needed)
 
             post_row(row, vplan_id, model)
 
@@ -121,7 +123,8 @@ def create_dict(keys, values):
     return dict
 
 def get_vplan(user):
-
+    kurs_filter = []
+    kuerzel_filter = []
     group_names = []
     if user.groups.exists():
         groups = user.groups.all()
@@ -133,12 +136,10 @@ def get_vplan(user):
 
         if user.schuelerprofile.kurse != '':
             kurs_filter = ast.literal_eval(user.schuelerprofile.kurse)
-        else:
-            kurs_filter = []
 
         filter_dict = create_dict(['klasse', 'fach'], [filter_klasse, kurs_filter])
     elif 'lehrer' in group_names:
-        kuerzel_filter = [user.lehrerprofile.kurzel]
+        kuerzel_filter = [user.lehrerprofile.kuerzel]
         filter_dict = create_dict(['kuerzel'], [kuerzel_filter])
         filter_klasse = []
     else:
@@ -154,9 +155,10 @@ def get_vplan(user):
     else:
         vplan, vplan_date, vplan_filtered = get_query(vplan_type = 'schueler', neu = True)
         vplan_a, vplan_a_date, vplan_a_filtered = get_query(vplan_type = 'schueler', neu = False)
+    if 'lehrer' in group_names or 'admin' in group_names:
         if kuerzel_filter != [] and kuerzel_filter != ['']:
             vplan_l, vplan_l_date, vplan_l_filtered = get_query(vplan_type = 'lehrer', filter = filter_dict , neu = True)
-        elif 'lehrer' in user.groups:
+        else:
             vplan_l, vplan_l_date, vplan_l_filtered = get_query(vplan_type = 'lehrer' , neu = True)
 
     return (vplan, vplan_date, vplan_filtered,
