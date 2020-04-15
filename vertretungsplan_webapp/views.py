@@ -56,7 +56,7 @@ def upload_file(request):
 @has_profile(redirect_url = 'logout')
 @login_required
 def home(request):
-    vplan, vplan_date, vplan_filtered, vplan_a, vplan_a_date, vplan_a_filtered, vplan_l, vplan_l_date, vplan_l_filtered, kurs_filter = get_vplan(request.user)
+    vplan, vplan_date, vplan_filtered, vplan_a, vplan_a_date, vplan_a_filtered, vplan_l, vplan_l_date, vplan_l_filtered = get_vplan(request.user)
 
     context = {
         'vplan': vplan,
@@ -65,7 +65,6 @@ def home(request):
         'vplan_a': vplan_a,
         'vplan_a_filtered': vplan_a_filtered,
         'vplan_a_date': vplan_a_date,
-        'kurs_filter': kurs_filter,
         'vplan_l': vplan_l,
         'vplan_l_date': vplan_l_date,
         'vplan_l_filtered': vplan_l_filtered,

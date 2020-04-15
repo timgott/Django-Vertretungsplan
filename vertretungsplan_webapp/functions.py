@@ -143,7 +143,10 @@ def get_vplan(user):
         filter_dict = create_dict(['lehrerName'], [kuerzel_filter])
         filter_klasse = []
     else:
-        return (None, None, None, None, None, None, None, None, None, None)
+        return (None, None, None,
+            None, None, None,
+            None, None, None,
+            )
 
     vplan_filtered = []
     vplan_l, vplan_l_date, vplan_l_filtered = (None, None, None)
