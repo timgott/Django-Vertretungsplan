@@ -17,6 +17,7 @@ from customUser.forms import UserCreationForm
 from .forms import UserUpdateForm, SchuelerProfileUpdateForm
 from .models import SchuelerProfile
 from .functions import create_dict
+
 from .decorators import has_profile
 
 def register(request):
