@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+{% load user_tags %}
+
 {% block title %}Profil - {{block.super}}{% endblock title %}
 {% block content %}
     <h1 class = "mb-4">
@@ -8,9 +10,20 @@
     <div class="row">
         <div class="col-xs-auto col-md-3 mb-4">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <a class="nav-link {% if active_tab == 'username-mail' %}active{% endif %}" id="username-mail-tab" data-toggle="pill" href="#username-mail" role="tab" aria-controls="username-mail" aria-selected="true">Nutzername/E-mail</a>
-                <a class="nav-link {% if active_tab == 'change-class' %}active{% endif %}" id="change-class-tab" data-toggle="pill" href="#change-class" role="tab" aria-controls="change-class" aria-selected="true">Klasse/Kurse ändern</a>
-                <a class="nav-link {% if active_tab == 'change-password' %}active{% endif %}" id="change-password-tab" data-toggle="pill" href="#change-password" role="tab" aria-controls="change-password" aria-selected="true">Passwort ändern</a>
+                <a class="nav-link {% if active_tab == 'username-mail' %}active{% endif %}" id="username-mail-tab" data-toggle="pill" href="#username-mail" role="tab" aria-controls="username-mail" aria-selected="true">
+                    Nutzername/E-mail
+                </a>
+                <a class="nav-link {% if active_tab == 'change-class' %}active{% endif %}" id="change-class-tab" data-toggle="pill" href="#change-class" role="tab" aria-controls="change-class" aria-selected="true">
+                    {% if user|has_group:"schueler" %}
+                        Klasse/Kurse ändern
+                    {% endif %}
+                    {% if user|has_group:"lehrer" %}
+                        Kürzel ändern
+                    {% endif %}
+                </a>
+                <a class="nav-link {% if active_tab == 'change-password' %}active{% endif %}" id="change-password-tab" data-toggle="pill" href="#change-password" role="tab" aria-controls="change-password" aria-selected="true">
+                    Passwort ändern
+                </a>
             </div>
         </div>
         <div class="col-xs-auto col-md-9">
@@ -21,9 +34,17 @@
                 <div class="tab-pane fade {% if active_tab == 'change-password' %}show active{% endif %}" id="change-password" role="tabpanel" aria-labelledby="change-password-tab">
                     {% block change-password %} {% endblock change-password %}
                 </div>
+                
                 <div class="tab-pane fade {% if active_tab == 'change-class' %}show active{% endif %}" id="change-class" role="tabpanel" aria-labelledby="change-class-tab">
-                    {% block change-class %} {% endblock change-class %}
+                    {% if user|has_group:"schueler" %}
+                        {% block change-class %} {% endblock change-class %}
+                    {% endif %}
+                    {% if user|has_group:"lehrer" %}
+                        {% block change-teacher %} {% endblock change-teacher %}
+                    {% endif %}
                 </div>
+                
+                
             </div>
         </div>
     </div>

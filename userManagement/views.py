@@ -14,10 +14,9 @@ from django.views.decorators.csrf import csrf_protect
 
 from customUser.forms import UserCreationForm
 
-from .forms import UserUpdateForm, SchuelerProfileUpdateForm
+from .forms import UserUpdateForm, SchuelerProfileUpdateForm, LehrerProfileUpdateForm
 from .models import SchuelerProfile
-from .functions import create_dict
-
+from .functions import create_dict, get_profile_form
 from .decorators import has_profile
 
 def register(request):
@@ -51,19 +50,20 @@ def logout(request):
 @login_required
 def profile(request):
     active_tab = 'username-mail'
+
     if request.method == 'POST':
-        
+
         if 'u_form' in request.POST:
             u_form = UserUpdateForm(request.POST, instance=request.user)
             if u_form.is_valid():
                 u_form.save()
             p_c_form = PasswordChangeForm(request.user)
-            p_form = SchuelerProfileUpdateForm(instance = request.user.schuelerprofile)
+            p_form, kurse_list = get_profile_form(request.user)
             active_tab = 'username-mail'
 
         elif 'p_form' in request.POST:
-            post_dict = create_dict(request.POST)
-            p_form = SchuelerProfileUpdateForm(post_dict, instance = request.user.schuelerprofile)
+
+            p_form, kurse_list = get_profile_form(request.user, request.POST)
             if p_form.is_valid():
                 p_form.save()
             p_c_form = PasswordChangeForm(request.user)
@@ -81,18 +81,13 @@ def profile(request):
 
             else:
                 active_tab = 'change-password'
+            p_form, kurse_list = get_profile_form(request.user)
             u_form = UserUpdateForm(instance=request.user)
-            p_form = SchuelerProfileUpdateForm(instance = request.user.schuelerprofile)
 
     else:
         u_form = UserUpdateForm(instance=request.user)
-        p_form = SchuelerProfileUpdateForm(instance = request.user.schuelerprofile)
+        p_form, kurse_list = get_profile_form(request.user)
         p_c_form = PasswordChangeForm(request.user)
-
-    if request.user.schuelerprofile.kurse != '':
-        kurse_list = ast.literal_eval(request.user.schuelerprofile.kurse)
-    else:
-        kurse_list = None
 
     context = {
         'u_form': u_form,

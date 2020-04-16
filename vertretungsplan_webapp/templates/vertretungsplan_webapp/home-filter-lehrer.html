@@ -1,0 +1,11 @@
+<div class="card mb-3">
+    <div class="card-header">
+        Ihre Einträge:
+    </div>
+    <div class="card-body">
+        {% include "vertretungsplan_webapp/home-table-lehrer.html" with list=filtered %}
+    </div>
+</div>
+<div class="collapse" id="collapseVplan">
+    {% include "vertretungsplan_webapp/home-table-lehrer.html" with list=vplan %}
+</div>
